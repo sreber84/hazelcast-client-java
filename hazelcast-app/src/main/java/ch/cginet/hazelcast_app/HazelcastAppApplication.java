@@ -37,7 +37,7 @@ public class HazelcastAppApplication {
                         map.put(key, value);
                         System.out.printf("Put entry: %s -> %s%n", key, value);
 
-                        Thread.sleep(5000); // Wait for 5 seconds before next iteration
+                        Thread.sleep(10);
 
                         System.out.println("Current Map Entries: " + map.size());
                     } catch (Exception e) {
@@ -74,7 +74,7 @@ class HealthCheckController {
     public String healthCheck() {
         try {
             hazelcastInstance.getMap(hazelcastMap).size();
-            return "Hazelcast is available";
+            return "Hazelcast is available - all ok";
         } catch (Exception e) {
             return "Hazelcast is not available: " + e.getMessage();
         }
