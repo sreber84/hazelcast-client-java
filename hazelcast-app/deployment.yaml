@@ -8,7 +8,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: hazelcast-client
+      app: hazelcast-client-java
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -18,7 +18,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        app: hazelcast-client
+        app: hazelcast-client-java
     spec:
       containers:
       - env:
@@ -28,7 +28,7 @@ spec:
           value: example-map
         image: quay.io/rhn_support_sreber/java-hazelcast:latest
         imagePullPolicy: Always
-        name: hazelcast-client
+        name: hazelcast-client-java
         readinessProbe:
           failureThreshold: 3
           httpGet:
