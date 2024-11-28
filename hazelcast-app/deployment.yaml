@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hazelcast-client-java
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: hazelcast-client
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: hazelcast-client
+    spec:
+      containers:
+      - env:
+        - name: HAZELCAST_SERVICE
+          value: hazelcast.project-100.svc.cluster.local:5701
+        - name: HAZELCAST_MAP
+          value: example-map
+        image: quay.io/rhn_support_sreber/java-hazelcast:latest
+        imagePullPolicy: Always
+        name: hazelcast-client
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        housi.org: client
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - effect: NoSchedule
+        key: housi.org
+        value: reserved
+      - effect: NoExecute
+        key: housi.org
+        value: reserved
